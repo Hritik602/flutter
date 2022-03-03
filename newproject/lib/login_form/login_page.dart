@@ -1,5 +1,8 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:newproject/home_screen/home_screen.dart';
+
 import 'package:newproject/utility/utility.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,8 +14,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final userName = TextEditingController();
+  final userEmail = TextEditingController();
   final userPassword = TextEditingController();
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -46,41 +51,96 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 50,
                   ),
-                  CustomTextfield(
-                      prefixIcon: emailIcon,
-                      hintText: emailLabelText,
-
-                      //  errorText: emailError,
-                      controller: userName),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Card(
+                      elevation: 2.0,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return passworderror;
+                          } else if (value.length < 6) {
+                            return "Paasword length must greater than 6";
+                          }
+                          return null;
+                        },
+                        controller: userEmail,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            focusColor: iconColor,
+                            prefixIcon: emailIcon,
+                            prefixIconColor: iconColor,
+                            labelStyle:
+                                const TextStyle(fontWeight: FontWeight.w900),
+                            filled: false,
+                            fillColor: Colors.black38,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(10)),
+                            labelText: emailLabelText,
+                            constraints: const BoxConstraints(
+                                maxHeight: 80,
+                                minHeight: 35,
+                                maxWidth: 400,
+                                minWidth: 200)),
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  CustomTextfield(
-                      prefixIcon: passIcon,
-                      hintText: passwordHintText,
-                      // errorText: passworderror,
-                      controller: userPassword),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Card(
+                      elevation: 2.0,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return passworderror;
+                          } else if (value.length < 6) {
+                            return "Paasword length must greater than 6";
+                          }
+                          return null;
+                        },
+                        controller: userPassword,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            focusColor: iconColor,
+                            prefixIcon: emailIcon,
+                            prefixIconColor: iconColor,
+                            labelStyle:
+                                const TextStyle(fontWeight: FontWeight.w900),
+                            filled: false,
+                            fillColor: Colors.black38,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(10)),
+                            labelText: passwordHintText,
+                            constraints: const BoxConstraints(
+                                maxHeight: 80,
+                                minHeight: 35,
+                                maxWidth: 400,
+                                minWidth: 200)),
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(
                     height: 10,
                   ),
                   LoginButton(
+                    formkey: _formKey,
                     onPressed: () {
-                      if (userName.text.isNotEmpty &&
-                          userPassword.text.isNotEmpty) {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomeScreen()));
+                      if (_formKey.currentState!.validate()) {
+                        print("clicked");
+                        setState(() {});
                       }
                     },
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-                  // const Align(
-                  //   alignment: Alignment.bottomCenter,
-                  //   child: Text("Don't have an account?"),
-                  // ),
+
                 ],
               ),
             )),
@@ -90,12 +150,19 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class LoginButton extends StatelessWidget {
-  LoginButton({Key? key, required this.onPressed}) : super(key: key);
+  LoginButton({Key? key, required this.formkey, required this.onPressed})
+      : super(key: key);
   Function onPressed;
+  final GlobalKey<FormState> formkey;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed(),
+      onTap: () {
+        if (formkey.currentState!.validate()) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()));
+        }
+      },
       child: Align(
         alignment: Alignment.bottomRight,
         child: Container(
@@ -138,6 +205,7 @@ class CustomText extends StatelessWidget {
   final String text;
   final double fontSize;
   final FontWeight? fontWeight;
+  @override
   Widget build(BuildContext context) {
     return Text(
       text,
@@ -147,13 +215,15 @@ class CustomText extends StatelessWidget {
 }
 
 class CustomTextfield extends StatelessWidget {
-  const CustomTextfield(
+  CustomTextfield(
       {Key? key,
       required this.controller,
       this.prefixIcon,
       this.errorText,
+      this.validate,
       this.hintText})
       : super(key: key);
+  Function? validate;
   final String? hintText;
   final String? errorText;
   final TextEditingController controller;
@@ -165,11 +235,7 @@ class CustomTextfield extends StatelessWidget {
       child: Card(
         elevation: 2.0,
         child: TextFormField(
-          validator: (value) {
-            if (value == null && value!.isNotEmpty) {
-              return "Can't be Empty";
-            }
-          },
+          validator: validate!(),
           controller: controller,
           cursorColor: Colors.black,
           decoration: InputDecoration(

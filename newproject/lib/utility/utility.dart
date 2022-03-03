@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 const emailError = "Please Enter Email";
@@ -8,5 +8,5 @@ const passwordHintText = " Password";
 const Icon emailIcon = Icon(Icons.email);
 const Icon passIcon = Icon(Icons.password);
 const Color iconColor = Colors.black;
-const userName = "";
-const userPassword = "";
+ String   userName = "";
+String  password = "";
