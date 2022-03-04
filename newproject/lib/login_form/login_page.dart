@@ -13,11 +13,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  //form key
   final _formKey = GlobalKey<FormState>();
+  //controll of useremail and password
   final userEmail = TextEditingController();
   final userPassword = TextEditingController();
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +51,8 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 50,
                   ),
+
+                  //Input field for email
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Card(
@@ -89,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 20,
                   ),
+                  //Input field for password
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Card(
@@ -124,23 +127,15 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-
                   const SizedBox(
                     height: 10,
                   ),
                   LoginButton(
                     formkey: _formKey,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        print("clicked");
-                        setState(() {});
-                      }
-                    },
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-
                 ],
               ),
             )),
@@ -150,9 +145,10 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class LoginButton extends StatelessWidget {
-  LoginButton({Key? key, required this.formkey, required this.onPressed})
-      : super(key: key);
-  Function onPressed;
+  const LoginButton({
+    Key? key,
+    required this.formkey,
+  }) : super(key: key);
   final GlobalKey<FormState> formkey;
   @override
   Widget build(BuildContext context) {
