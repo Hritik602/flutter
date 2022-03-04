@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:newproject/Module/user_details.dart';
-import 'package:newproject/utility/utility.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key, required this.userName}) : super(key: key);
@@ -33,6 +32,25 @@ class _HomeScreenState extends State<HomeScreen> {
     var platform = NotificationDetails(android: androidNotificationDetails);
     await localNotificationsPlugin.show(
         0, "Hello", "Have a nice day.", platform);
+  }
+
+  final students = StudentDetails.studentDetails;
+  bool searchItem() {
+    var studentsLen = students.length;
+    for (int i = 0; i <= studentsLen; i++) {
+      (searchedItem.text.toUpperCase().codeUnits ==
+              students[i].name_students!.codeUnits) ||
+          (searchedItem.text.codeUnits[0] ==
+              students[i].roll_no!.toString().codeUnits[0]);
+      return true;
+    }
+    return false;
+  }
+
+  student_index() {
+    for (int i = 0; i < students.length; i++) {
+      return i;
+    }
   }
 
   final searchedItem = TextEditingController();
@@ -85,7 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        setState(() {});
+                        print(searchItem());
+
+                        setState(() {
+                          print(student_index());
+                        });
                       },
                       child: Container(
                         width: 50,
@@ -106,6 +128,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 30,
                 ),
+                // searchItem()
+                //     ? ListTile(
+                //         leading: const CircleAvatar(
+                //           radius: 28,
+                //           backgroundColor: Colors.black12,
+                //           child: CircleAvatar(
+                //             radius: 26,
+                //             backgroundColor: Colors.black12,
+                //           ),
+                //         ),
+                //         title: Text(
+                //           StudentDetails
+                //               .studentDetails[student_index()].name_students
+                //               .toString(),
+                //           style: Theme.of(context).textTheme.headline6,
+                //         ),
+                //       )
+                //     : Container()
+
                 SizedBox(
                   height: 500,
                   child: ListView.separated(
@@ -125,15 +166,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .toString()
                                         .codeUnits[0])
                             ? ListTile(
-                                leading: CircleAvatar(
+                                leading: const CircleAvatar(
                                   radius: 28,
                                   backgroundColor: Colors.black12,
                                   child: CircleAvatar(
                                     radius: 26,
                                     backgroundColor: Colors.black12,
-                                    child: Image.network(
-                                      "https://www.istockphoto.com/photo/handsome-afro-student-posing-on-bookshelves-background-gm1171062918-324287675",
-                                      fit: BoxFit.contain,
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 45,
                                     ),
                                   ),
                                 ),
@@ -141,6 +182,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   student[index].name_students!.toString(),
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
+                                subtitle:
+                                    Text("Roll No:${student[index].roll_no}"),
                               )
                             : Container();
                       }),
