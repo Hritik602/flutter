@@ -60,11 +60,12 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return passworderror;
-                          } else if (value.length < 6) {
-                            return "Paasword length must greater than 6";
+                            return emailError;
                           }
-                          return null;
+                          setState(() {
+                            userName = value;
+                            userDetails.add(value);
+                          });
                         },
                         controller: userEmail,
                         cursorColor: Colors.black,
@@ -131,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 10,
                   ),
                   LoginButton(
+                    name: userEmail.text,
                     formkey: _formKey,
                   ),
                   const SizedBox(
@@ -148,15 +150,22 @@ class LoginButton extends StatelessWidget {
   const LoginButton({
     Key? key,
     required this.formkey,
+    required this.name,
   }) : super(key: key);
+  final String name;
   final GlobalKey<FormState> formkey;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        print(userName);
         if (formkey.currentState!.validate()) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()));
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomeScreen(
+                        userName: name,
+                      )));
         }
       },
       child: Align(
